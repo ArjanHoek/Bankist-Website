@@ -107,3 +107,27 @@ const handleHover = function ({ target, type }) {
 );
 
 // STICKY NAVIGATION
+// window.addEventListener('scroll', function () {
+//   const threshold = section1.getBoundingClientRect().top;
+
+//   if (threshold < 0) {
+//     navEl.classList.add('sticky');
+//   } else {
+//     navEl.classList.remove('sticky');
+//   }
+// });
+
+const headerEl = document.querySelector('.header');
+const stickyNavRootMargin = `-${navEl.getBoundingClientRect().height}px`;
+
+const stickyNavCallback = ([{ isIntersecting }]) => {
+  navEl.classList[isIntersecting ? 'remove' : 'add']('sticky');
+};
+
+const stickyNavOptions = {
+  root: null,
+  threshold: 0,
+  rootMargin: stickyNavRootMargin,
+};
+
+new IntersectionObserver(stickyNavCallback, stickyNavOptions).observe(headerEl);
