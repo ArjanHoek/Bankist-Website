@@ -196,32 +196,69 @@ images.forEach(img => imgObserver.observe(img));
 // IMAGE SLIDER
 const sliderEl = document.querySelector('.slider');
 const slides = sliderEl.querySelectorAll('.slide');
-let curSlide = 0;
-const lastIndex = slides.length - 1;
+const dotsContainer = document.querySelector('.dots');
 
-const goToSlide = slideInd =>
+let curSlide = 0;
+
+const setCurSlide = slideNum => (curSlide = slideNum);
+
+const moveSlides = () =>
   slides.forEach((slide, index) => {
-    slide.style.transform = `translateX(${(index - slideInd) * 100}%)`;
+    slide.style.transform = `translateX(${(index - curSlide) * 100}%)`;
   });
 
-goToSlide(0);
+const updateDots = () =>
+  dotsContainer.querySelectorAll('.dots__dot').forEach(dot => {
+    if (+dot.dataset.slide === curSlide) {
+      dot.classList.add('dots__dot--active');
+    } else {
+      dot.classList.remove('dots__dot--active');
+    }
+  });
 
-const setNextSlide = () => {
-  curSlide = curSlide === lastIndex ? 0 : curSlide + 1;
+const goToSlide = slideNum => {
+  setCurSlide(slideNum);
+  moveSlides();
+  updateDots();
 };
 
-const setPrevSlide = () => {
-  curSlide = !curSlide ? lastIndex : curSlide - 1;
+const getLastIndex = () => slides.length - 1;
+const getNextSlide = cur => (cur === getLastIndex() ? 0 : cur + 1);
+const getPrevSlide = cur => (cur === 0 ? getLastIndex() : cur - 1);
+
+const createDots = () =>
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.classList.add('dots__dot');
+    d.dataset.slide = i;
+    dotsContainer.appendChild(d);
+  });
+
+const addSliderEventListeners = () => {
+  sliderEl.addEventListener('click', function ({ target }) {
+    const isBtn = target.closest('.slider__btn');
+
+    if (!isBtn) return;
+
+    const next = target.classList.contains('slider__btn--right');
+
+    goToSlide(next ? getNextSlide(curSlide) : getPrevSlide(curSlide));
+  });
+
+  dotsContainer.addEventListener('click', function ({ target: { dataset } }) {
+    const { slide } = dataset;
+    dataset && goToSlide(+slide);
+  });
+
+  document.addEventListener('keydown', function ({ key }) {
+    key === 'ArrowLeft' && goToSlide(getPrevSlide(curSlide));
+    key === 'ArrowRight' && goToSlide(getNextSlide(curSlide));
+  });
 };
 
-sliderEl.addEventListener('click', function ({ target }) {
-  const handleClick = target.closest('.slider__btn');
-
-  if (!handleClick) return;
-
-  const showNext = target.classList.contains('slider__btn--right');
-
-  showNext ? setNextSlide() : setPrevSlide();
-
-  goToSlide(curSlide);
-});
+// INITIATE SLIDER
+(() => {
+  addSliderEventListeners();
+  createDots();
+  goToSlide(0);
+})();
