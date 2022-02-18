@@ -193,72 +193,81 @@ const imgObserver = new IntersectionObserver(imgCallback, imgOptions);
 
 images.forEach(img => imgObserver.observe(img));
 
-// IMAGE SLIDER
-const sliderEl = document.querySelector('.slider');
-const slides = sliderEl.querySelectorAll('.slide');
-const dotsContainer = document.querySelector('.dots');
-
-let curSlide = 0;
-
-const setCurSlide = slideNum => (curSlide = slideNum);
-
-const moveSlides = () =>
-  slides.forEach((slide, index) => {
-    slide.style.transform = `translateX(${(index - curSlide) * 100}%)`;
-  });
-
-const updateDots = () =>
-  dotsContainer.querySelectorAll('.dots__dot').forEach(dot => {
-    if (+dot.dataset.slide === curSlide) {
-      dot.classList.add('dots__dot--active');
-    } else {
-      dot.classList.remove('dots__dot--active');
-    }
-  });
-
-const goToSlide = slideNum => {
-  setCurSlide(slideNum);
-  moveSlides();
-  updateDots();
-};
-
-const getLastIndex = () => slides.length - 1;
-const getNextSlide = cur => (cur === getLastIndex() ? 0 : cur + 1);
-const getPrevSlide = cur => (cur === 0 ? getLastIndex() : cur - 1);
-
-const createDots = () =>
-  slides.forEach((_, i) => {
-    const d = document.createElement('button');
-    d.classList.add('dots__dot');
-    d.dataset.slide = i;
-    dotsContainer.appendChild(d);
-  });
-
-const addSliderEventListeners = () => {
-  sliderEl.addEventListener('click', function ({ target }) {
-    const isBtn = target.closest('.slider__btn');
-
-    if (!isBtn) return;
-
-    const next = target.classList.contains('slider__btn--right');
-
-    goToSlide(next ? getNextSlide(curSlide) : getPrevSlide(curSlide));
-  });
-
-  dotsContainer.addEventListener('click', function ({ target: { dataset } }) {
-    const { slide } = dataset;
-    dataset && goToSlide(+slide);
-  });
-
-  document.addEventListener('keydown', function ({ key }) {
-    key === 'ArrowLeft' && goToSlide(getPrevSlide(curSlide));
-    key === 'ArrowRight' && goToSlide(getNextSlide(curSlide));
-  });
-};
-
-// INITIATE SLIDER
+// INITIATE IMAGE SLIDER
 (() => {
+  const sliderEl = document.querySelector('.slider');
+  const slides = sliderEl.querySelectorAll('.slide');
+  const dotsContainer = document.querySelector('.dots');
+
+  let curSlide = 0;
+
+  const setCurSlide = slideNum => (curSlide = slideNum);
+
+  const moveSlides = () =>
+    slides.forEach((slide, index) => {
+      slide.style.transform = `translateX(${(index - curSlide) * 100}%)`;
+    });
+
+  const updateDots = () =>
+    dotsContainer.querySelectorAll('.dots__dot').forEach(dot => {
+      if (+dot.dataset.slide === curSlide) {
+        dot.classList.add('dots__dot--active');
+      } else {
+        dot.classList.remove('dots__dot--active');
+      }
+    });
+
+  const goToSlide = slideNum => {
+    setCurSlide(slideNum);
+    moveSlides();
+    updateDots();
+  };
+
+  const getLastIndex = () => slides.length - 1;
+  const getNextSlide = cur => (cur === getLastIndex() ? 0 : cur + 1);
+  const getPrevSlide = cur => (cur === 0 ? getLastIndex() : cur - 1);
+
+  const createDots = () =>
+    slides.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.classList.add('dots__dot');
+      d.dataset.slide = i;
+      dotsContainer.appendChild(d);
+    });
+
+  const addSliderEventListeners = () => {
+    sliderEl.addEventListener('click', function ({ target }) {
+      const isBtn = target.closest('.slider__btn');
+
+      if (!isBtn) return;
+
+      const next = target.classList.contains('slider__btn--right');
+
+      goToSlide(next ? getNextSlide(curSlide) : getPrevSlide(curSlide));
+    });
+
+    dotsContainer.addEventListener('click', function ({ target: { dataset } }) {
+      const { slide } = dataset;
+      dataset && goToSlide(+slide);
+    });
+
+    document.addEventListener('keydown', function ({ key }) {
+      key === 'ArrowLeft' && goToSlide(getPrevSlide(curSlide));
+      key === 'ArrowRight' && goToSlide(getNextSlide(curSlide));
+    });
+  };
+
   addSliderEventListeners();
   createDots();
   goToSlide(0);
 })();
+
+// document.addEventListener('DOMContentLoaded', function (e) {
+//   console.log('HTML parsed and DOM tree built');
+//   console.log(e);
+// });
+
+// window.addEventListener('load', function (e) {
+//   console.log('Page fully loaded');
+//   console.log(e);
+// });
