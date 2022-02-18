@@ -137,25 +137,58 @@ const stickyNavObserver = new IntersectionObserver(
 
 stickyNavObserver.observe(headerEl);
 
-// REVEAL IMAGES ON SCROLL
-const images = document.querySelectorAll('.lazy-img');
+// REVEAL SECTIONS ON SCROLL
+const sections = document.querySelectorAll('.section');
 
-const imageRevealCallback = entries => {
+const sectionRevealCallback = (entries, observer) => {
   entries.forEach(({ isIntersecting, target }) => {
     if (isIntersecting) {
-      target.classList.remove('lazy-img');
+      target.classList.remove('section--hidden');
+      observer.unobserve(target);
     }
   });
 };
 
-const imageRevealOptions = {
+const sectionRevealOptions = {
   root: null,
-  threshold: 1,
+  threshold: 0.2,
 };
 
-const imageRevealObserver = new IntersectionObserver(
-  imageRevealCallback,
-  imageRevealOptions
+const sectionRevealObserver = new IntersectionObserver(
+  sectionRevealCallback,
+  sectionRevealOptions
 );
 
-images.forEach(img => imageRevealObserver.observe(img));
+sections.forEach(section => {
+  section.classList.add('section--hidden');
+  sectionRevealObserver.observe(section);
+});
+
+// REVEAL IMAGES ON SCROLL
+const images = document.querySelectorAll('.lazy-img');
+
+const imgCallback = (entries, observer) => {
+  entries.forEach(entry => {
+    const { isIntersecting, target } = entry;
+
+    if (!isIntersecting) return;
+
+    target.src = target.getAttribute('data-src');
+
+    target.addEventListener('load', function () {
+      target.classList.remove('lazy-img');
+    });
+
+    observer.unobserve(target);
+  });
+};
+
+const imgOptions = {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+};
+
+const imgObserver = new IntersectionObserver(imgCallback, imgOptions);
+
+images.forEach(img => imgObserver.observe(img));
