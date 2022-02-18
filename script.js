@@ -130,4 +130,32 @@ const stickyNavOptions = {
   rootMargin: stickyNavRootMargin,
 };
 
-new IntersectionObserver(stickyNavCallback, stickyNavOptions).observe(headerEl);
+const stickyNavObserver = new IntersectionObserver(
+  stickyNavCallback,
+  stickyNavOptions
+);
+
+stickyNavObserver.observe(headerEl);
+
+// REVEAL IMAGES ON SCROLL
+const images = document.querySelectorAll('.lazy-img');
+
+const imageRevealCallback = entries => {
+  entries.forEach(({ isIntersecting, target }) => {
+    if (isIntersecting) {
+      target.classList.remove('lazy-img');
+    }
+  });
+};
+
+const imageRevealOptions = {
+  root: null,
+  threshold: 1,
+};
+
+const imageRevealObserver = new IntersectionObserver(
+  imageRevealCallback,
+  imageRevealOptions
+);
+
+images.forEach(img => imageRevealObserver.observe(img));
