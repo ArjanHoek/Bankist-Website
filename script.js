@@ -73,7 +73,7 @@ const contentItems = operationsEl.querySelectorAll('.operations__content');
 tabContainer.addEventListener('click', function ({ target }) {
   const tab = target.closest('.operations__tab');
 
-  if (tab) return;
+  if (!tab) return;
 
   const newTab = operationsEl.querySelector(
     `.operations__content--${tab.getAttribute('data-tab')}`
