@@ -80,3 +80,50 @@ navLinks.addEventListener('click', function (e) {
     smoothTo(anchorEl);
   }
 });
+
+// Tabbed component
+const switchClass = (className, removeFromItems, addToItem) => {
+  removeFromItems.forEach(item => item.classList.remove(className));
+  addToItem && addToItem.classList.add(className);
+};
+
+const operationsEl = document.querySelector('.operations');
+const tabContainer = operationsEl.querySelector('.operations__tab-container');
+const tabItems = tabContainer.querySelectorAll('.operations__tab');
+const contentItems = operationsEl.querySelectorAll('.operations__content');
+
+tabContainer.addEventListener('click', function ({ target }) {
+  const tab = target.closest('.operations__tab');
+
+  if (tab) return;
+
+  const newTab = operationsEl.querySelector(
+    `.operations__content--${tab.getAttribute('data-tab')}`
+  );
+
+  switchClass('operations__tab--active', tabItems, tab);
+  switchClass('operations__content--active', contentItems, newTab);
+});
+
+// Nav hover effect
+const getSiblings = (self, siblingClass, parentClass) =>
+  Array.from(
+    self.closest(`.${parentClass}`).querySelectorAll(`.${siblingClass}`)
+  ).filter(el => el !== self);
+
+const navEl = document.querySelector('.nav');
+
+const handleHover = function ({ target, type }) {
+  if (!target.classList.contains('nav__link')) return;
+
+  const siblings = getSiblings(target, 'nav__link', 'nav__links');
+  const logo = target.closest('.nav').querySelector('img');
+
+  [...siblings, logo].forEach(item =>
+    item.classList[type === 'mouseover' ? 'add' : 'remove']('opaque')
+  );
+};
+
+['mouseover', 'mouseout'].forEach(event =>
+  navEl.addEventListener(event, handleHover)
+);
