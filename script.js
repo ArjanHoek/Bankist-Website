@@ -1,15 +1,11 @@
 'use strict';
 
+// MODAL WINDOW
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
-///////////////////////////////////////
-// Modal window
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -32,7 +28,9 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// Smooth scrolling
+// SMOOTH SCROLLING
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 
 /* Old method */
 // const smoothTo = el =>
@@ -47,27 +45,7 @@ btnScrollTo.addEventListener('click', function () {
   smoothTo(section1);
 });
 
-// Page navigation
-// const navLinks = document.querySelectorAll('.nav__link');
-
-// navLinks.forEach(link =>
-//   link.addEventListener('click', function (e) {
-//     e.preventDefault();
-
-//     const anchorId = link.getAttribute('href');
-
-//     if (anchorId === '#') {
-//       return;
-//     }
-
-//     const anchorEl = document.querySelector(anchorId);
-
-//     if (anchorEl) {
-//       smoothTo(anchorEl);
-//     }
-//   })
-// );
-
+// PAGE NAVIGATION
 const navLinks = document.querySelector('.nav__links');
 
 navLinks.addEventListener('click', function (e) {
@@ -81,7 +59,7 @@ navLinks.addEventListener('click', function (e) {
   }
 });
 
-// Tabbed component
+// TABBED COMPONENT
 const switchClass = (className, removeFromItems, addToItem) => {
   removeFromItems.forEach(item => item.classList.remove(className));
   addToItem && addToItem.classList.add(className);
@@ -105,7 +83,7 @@ tabContainer.addEventListener('click', function ({ target }) {
   switchClass('operations__content--active', contentItems, newTab);
 });
 
-// Nav hover effect
+// NAVIGATION HOVER EFFECT
 const getSiblings = (self, siblingClass, parentClass) =>
   Array.from(
     self.closest(`.${parentClass}`).querySelectorAll(`.${siblingClass}`)
@@ -127,3 +105,5 @@ const handleHover = function ({ target, type }) {
 ['mouseover', 'mouseout'].forEach(event =>
   navEl.addEventListener(event, handleHover)
 );
+
+// STICKY NAVIGATION
