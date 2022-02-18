@@ -192,3 +192,36 @@ const imgOptions = {
 const imgObserver = new IntersectionObserver(imgCallback, imgOptions);
 
 images.forEach(img => imgObserver.observe(img));
+
+// IMAGE SLIDER
+const sliderEl = document.querySelector('.slider');
+const slides = sliderEl.querySelectorAll('.slide');
+let curSlide = 0;
+const lastIndex = slides.length - 1;
+
+const goToSlide = slideInd =>
+  slides.forEach((slide, index) => {
+    slide.style.transform = `translateX(${(index - slideInd) * 100}%)`;
+  });
+
+goToSlide(0);
+
+const setNextSlide = () => {
+  curSlide = curSlide === lastIndex ? 0 : curSlide + 1;
+};
+
+const setPrevSlide = () => {
+  curSlide = !curSlide ? lastIndex : curSlide - 1;
+};
+
+sliderEl.addEventListener('click', function ({ target }) {
+  const handleClick = target.closest('.slider__btn');
+
+  if (!handleClick) return;
+
+  const showNext = target.classList.contains('slider__btn--right');
+
+  showNext ? setNextSlide() : setPrevSlide();
+
+  goToSlide(curSlide);
+});
